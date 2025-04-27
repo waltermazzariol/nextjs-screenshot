@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import chromium from '@sparticuz/chromium-min';
+import chromium from '@sparticuz/chromium';
 import puppeteerCore from 'puppeteer-core';
 // import puppeteer from 'puppeteer';
 
