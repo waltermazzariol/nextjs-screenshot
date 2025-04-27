@@ -30,8 +30,8 @@ export default async function handler(
         '--single-process', // Important: This helps with memory issues
         '--disable-gpu'],
       defaultViewport: {
-          width: 1200,
-          height: 600,
+          width: 640,
+          height: 480,
         },
       timeout: 30000,
       executablePath: await chromium.executablePath(remoteExecutablePath),

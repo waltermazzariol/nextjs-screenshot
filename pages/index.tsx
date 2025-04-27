@@ -6,7 +6,7 @@ const Home: NextPage = () => {
   return (
     <div className="">
       <Head>
-        <title>Nextjs Screenshot API - Themeptation</title>
+        <title>Wansite Screenshot API</title>
         <meta
           name="description"
           content="Easily capture a screenshot of any website with our fast and reliable tool. Try it now and get your screenshot in seconds."
@@ -18,10 +18,7 @@ const Home: NextPage = () => {
         <div className="relative px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl font-bold text-gray-900 lg:text-7xl">
-              Nextjs Screenshot API{" "}
-              <span className="block py-2 bg-clip-text text-transparent bg-gradient-to-r from-[#44BCFF] via-[#7cf6a9] to-[#FF675E]">
-                Easy
-              </span>
+              Wansite Screenshot API{" "}
             </h1>
             <p className="max-w-5xl mx-auto mt-6 text-base font-normal leading-7 text-gray-500">
               Simply copy and paste the code below into your browser, change the
@@ -34,7 +31,7 @@ const Home: NextPage = () => {
 
         <div className="max-w-5xl mx-auto my-12">
           <CopyBlock
-            text={`${process.env.NEXT_PUBLIC_APP_URL}/api/screenshot?url=https://themeptation.net`}
+            text={`${process.env.NEXT_PUBLIC_APP_URL}/api/screenshot?url=https://wansite.co/startpage`}
             language="javascript"
             showLineNumbers="true"
             wrapLines
