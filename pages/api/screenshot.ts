@@ -8,7 +8,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { url } = req.query;
+  const { url, token } = req.query;
+
+  if (!token || token !== process.env.VALID_TOKEN) {
+    return res.status(401).json({ error: "Invalid or missing authentication token" });
+  }
   
   if (!url) {
     return res.status(400).json({ error: "URL parameter is required" });
@@ -30,8 +34,8 @@ export default async function handler(
         '--single-process', // Important: This helps with memory issues
         '--disable-gpu'],
       defaultViewport: {
-          width: 640,
-          height: 480,
+          width: 1600,
+          height: 1200,
         },
       timeout: 30000,
       executablePath: await chromium.executablePath(remoteExecutablePath),
@@ -39,7 +43,7 @@ export default async function handler(
     const page = await browser.newPage();
     console.log(`Navigating to: ${url}`);
     await page.goto(url as string, { waitUntil: 'networkidle2' });
-    const screenshot = await page.screenshot({ type: "png" });
+    const screenshot = await page.screenshot({ type: "jpeg", quality: 80 });
     console.log('Screenshot taken');
     res.setHeader('Content-Type', 'image/png');
     res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate');
