@@ -37,9 +37,12 @@ export default async function handler(
       executablePath: await chromium.executablePath(remoteExecutablePath),
     });
     const page = await browser.newPage();
-    await page.setViewport({ width: 1600, height: 1200 });
+    console.log(`Navigating to: ${url}`);
     await page.goto(url as string, { waitUntil: 'networkidle2' });
     const screenshot = await page.screenshot({ type: "png" });
+    console.log('Screenshot taken');
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate');
     res.status(200).send(screenshot);
   } catch (error) {
     console.error('Puppeteer error:', error);
