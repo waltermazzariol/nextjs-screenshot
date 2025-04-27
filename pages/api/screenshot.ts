@@ -21,8 +21,19 @@ export default async function handler(
   try {
     // Configure Puppeteer with additional options to handle Chromium issues
     browser = await puppeteerCore.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      headless: true,
+      args: ['--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage', // Prevents crashes in limited memory environments
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--single-process', // Important: This helps with memory issues
+        '--disable-gpu'],
+      defaultViewport: {
+          width: 1200,
+          height: 600,
+        },
+      timeout: 30000,
       executablePath: await chromium.executablePath(remoteExecutablePath),
     });
     const page = await browser.newPage();
