@@ -1,29 +1,30 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-const puppeteer = require('puppeteer');
+import chromium from '@sparticuz/chromium-min';
+import puppeteerCore from 'puppeteer-core';
+// import puppeteer from 'puppeteer';
+
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { url } = req.query;
-
+  
   if (!url) {
     return res.status(400).json({ error: "URL parameter is required" });
   }
-
+  
+  const remoteExecutablePath = "https://github.com/Sparticuz/chromium/releases/download/v121.0.0/chromium-v121.0.0-pack.tar"
+  
   let browser;
 
   try {
-    // When using regular puppeteer (not puppeteer-core):
-    // 1. It will use the automatically downloaded Chromium
-    // 2. You can override with executablePath if needed
-    browser = await puppeteer.launch({
-      ignoreHTTPSErrors: true,
+    // Configure Puppeteer with additional options to handle Chromium issues
+    browser = await puppeteerCore.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      // Optional: You can still specify a custom path if needed
-      // executablePath: process.env.CHROME_PATH,
+      headless: true,
+      executablePath: await chromium.executablePath(remoteExecutablePath),
     });
-    
     const page = await browser.newPage();
     await page.setViewport({ width: 1600, height: 1200 });
     await page.goto(url as string, { waitUntil: 'networkidle2' });
