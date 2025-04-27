@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import path from "path";
-const puppeteer = require('puppeteer-core');
+const puppeteer = require('puppeteer');
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,13 +14,16 @@ export default async function handler(
   let browser;
 
   try {
-    // Configure Puppeteer with additional options to handle Chromium issues
+    // When using regular puppeteer (not puppeteer-core):
+    // 1. It will use the automatically downloaded Chromium
+    // 2. You can override with executablePath if needed
     browser = await puppeteer.launch({
       ignoreHTTPSErrors: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      // Use a custom Chrome path if specified in environment variables
-      executablePath: process.env.CHROME_PATH || undefined
+      // Optional: You can still specify a custom path if needed
+      // executablePath: process.env.CHROME_PATH,
     });
+    
     const page = await browser.newPage();
     await page.setViewport({ width: 1600, height: 1200 });
     await page.goto(url as string, { waitUntil: 'networkidle2' });
