@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-const puppeteer = require("puppeteer");
+import path from "path";
+const puppeteer = require('puppeteer-core');
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,13 +15,20 @@ export default async function handler(
   let browser;
 
   try {
-    browser = await puppeteer.launch();
+    // Configure Puppeteer with additional options to handle Chromium issues
+    browser = await puppeteer.launch({
+      ignoreHTTPSErrors: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      // Use a custom Chrome path if specified in environment variables
+      executablePath: process.env.CHROME_PATH || undefined
+    });
     const page = await browser.newPage();
     await page.setViewport({ width: 1600, height: 1200 });
-    await page.goto(url);
+    await page.goto(url as string, { waitUntil: 'networkidle2' });
     const screenshot = await page.screenshot({ type: "png" });
     res.status(200).send(screenshot);
   } catch (error) {
+    console.error('Puppeteer error:', error);
     res.status(500).json({ error: (error as any).message });
   } finally {
     if (browser) {
