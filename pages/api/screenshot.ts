@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import chromium from '@sparticuz/chromium';
 import puppeteerCore from 'puppeteer-core';
-import sharp from 'sharp';
+// import puppeteer from 'puppeteer';
 
 
 export default async function handler(
@@ -43,23 +43,17 @@ export default async function handler(
     const page = await browser.newPage();
     console.log(`Navigating to: ${url}`);
     await page.goto(url as string, { waitUntil: 'networkidle2' });
-    // Captura la imagen
-    const screenshotBuffer = await page.screenshot({ 
+    const screenshot = await page.screenshot({ 
       type: "webp", 
       quality: 70,
       fullPage: false, 
       encoding: "binary",
       omitBackground: true 
     });
-    // Escala la imagen al 50% de su tamaño original
-    const resizedScreenshot = await sharp(screenshotBuffer)
-      .resize({ width: 800 }) // Ajusta el ancho deseado
-      .toBuffer();
-
     console.log('Screenshot taken');
     res.setHeader('Content-Type', 'image/webp');
     res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate');
-    res.status(200).send(resizedScreenshot);
+    res.status(200).send(screenshot);
   } catch (error) {
     console.error('Puppeteer error:', error);
     res.status(500).json({ error: (error as any).message });
