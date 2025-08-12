@@ -43,14 +43,9 @@ export default async function handler(
     const page = await browser.newPage();
     console.log(`Navigating to: ${url}`);
     await page.goto(url as string, { waitUntil: 'networkidle2' });
-    const screenshot = await page.screenshot({ type: "jpeg", quality: 70, clip: {
-        x: 0,
-        y: 0,
-        width: 800,  // La mitad del viewport
-        height: 600  // La mitad del viewport, manteniendo proporción
-      }});
+    const screenshot = await page.screenshot({ type: "webp", quality: 70});
     console.log('Screenshot taken');
-    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Content-Type', 'image/webp');
     res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate');
     res.status(200).send(screenshot);
   } catch (error) {
